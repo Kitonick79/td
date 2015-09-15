@@ -1,0 +1,9 @@
+#!bin/bash
+
+git config --global user.name "Dmitrii Miagkov"
+git config --global user.email myagkov.dv@gmail.com
+
+test -d "bin" || mkdir -pv bin #Test if working path exists, creating it otherwise
+test -d "bin" && cd bin # Test if catalog exists and make it current
+
+git clone https://github.com/Kitonick79/td.git #Creating a project's repo

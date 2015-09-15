@@ -1,0 +1,8 @@
+#bin/bash
+
+if command -v git 2>&1
+then 
+	echo "Git is installed"
+else 
+	sudo apt-get install git
+fi 

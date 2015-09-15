@@ -1,0 +1,15 @@
+#!bin/bash
+
+test -f /usr/bin/git
+if [ "$?" -eq 0 ] 	#Check the return code
+then 			# The return code is zero
+
+	printf "%s\n" 'git is already installed'
+	
+else 			#The return code is NOT zero
+
+	echo "%s\n" 'git is installed'
+	
+
+fi
+
