@@ -1,0 +1,13 @@
+from playhouse.migrate import *
+import peewee
+
+db = peewee.SqliteDatabase('test.sqlite', check_same_thread=False)
+migrator = SqliteMigrator(my_db)
+
+migrate(
+    # Make `pub_date` allow NULL values.
+    migrator.drop_not_null('story', 'pub_date'),
+
+    # Prevent `modified_date` from containing NULL values.
+    migrator.add_not_null('story', 'modified_date'),
+)
