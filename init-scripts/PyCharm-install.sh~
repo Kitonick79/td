@@ -1,0 +1,4 @@
+#bin/bash
+#Installing PyCharm on a computer without jre
+
+apt-get install default-jre
