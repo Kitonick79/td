@@ -15,6 +15,13 @@ class BaseModel(peewee.Model):
     class Meta:
         database = db
 
+class User(BaseModel):
+    username = peewee.CharField(max_length=80)
+    email = peewee.CharField(max_length=120)
+
+    def __unicode__(self):
+        return self.username
+
 class People(BaseModel):
     first_name   = peewee.CharField(max_length=64)
     middle_name  = peewee.CharField(max_length=64)
@@ -40,6 +47,46 @@ class Location(BaseModel):
     name          = peewee.CharField(max_length=64)
     description   = peewee.TextField(null = True)
     adress        = peewee.IntegerField(null= True)
+
+class Project(BaseModel):
+    name          = peewee.CharField(max_length=120)
+    Description = peewee.TextField(null = True)
+
+    def __unicode__(self):
+        return self.name
+
+class Event(BaseModel):
+	"""Model for events, training groups mostly"""
+	name         = peewee.CharField(max_length = 64)
+	event_type   = peewee.CharField() #to do, restrict field's values
+	member       = peewee.ForeignKeyField(People)
+	location     = peewee.ForeignKeyField(Location)
+	trainer      = peewee.ForeignKeyField(User)
+	#aid          = peewee.ForeignKeyField(PeopleGroupAid)
+	date         = peewee.DateTimeField()
+	project      = peewee.ForeignKeyField(Project)
+
+	def __unicode__(self):
+		return self.name
+
+class PeopleGroup(BaseModel):
+    people = peewee.ForeignKeyField(People, related_name='event participant')
+    event = peewee.ForeignKeyField(Event, related_name='event member')
+
+    def __unicode__(self):
+        return self.people
+
+class PeopleGroupAid(BaseModel):
+	people_event = peewee.ForeignKeyField(PeopleGroup, related_name = 'people get help on event')
+	aid = peewee.ForeignKeyField(Resource, related_name = 'resource name')
+	quantity = peewee.IntegerField()
+
+	def __unicode__(self):
+        return self.people_event
+
+#class UserAdmin(ModelView):
+
+
 
 
 
@@ -81,15 +128,26 @@ if __name__ == '__main__':
 
     admin = admin.Admin(app, name='Dom gde teplo')
     admin.add_view(PeopleView(People))
+    admin.add_view(ModelView(User))
     admin.add_view(ResourceView(Resource))
     admin.add_view(LocationView(Location))
+    admin.add_view(ModelView(Project))
+    admin.add_view(ModelView(Event))
+    admin.add_view(ModelView(PeopleGroup))
+    admin.add_view(ModelView(PeopleGroupAid))
     #admin.add_view(UserAdmin(User))
     #admin.add_view(PostAdmin(Post))
 
     try:
+        Project.create_table()
+        Event.create_table()
+        PeopleGroup.create_table()
+        PeopleGroupAid.create_table()
+        User.create_table()
         People.create_table()
         Resource.create_table()
         Location.create_table()
+        
         
     except:
         pass
